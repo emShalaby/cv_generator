@@ -1,13 +1,18 @@
-interface ITextInput {
+interface IInput {
   id?: string;
   type?: React.HTMLInputTypeAttribute;
   label?: string;
+  className?: string;
 }
-export default function TextInput(props: ITextInput) {
+export default function Input(props: IInput) {
   return (
-    <div>
+    <div className="flex flex-col gap-2 font-semibold mb-1">
       <label htmlFor={props.id}>{props.label}</label>
-      <input type={props.type} id={props.id}></input>
+      <input
+        type={props.type}
+        id={props.id}
+        className={`bg-[#EFF0F3] rounded-md px-2 text-sm py-1 ${props.className || ""}`}
+      ></input>
     </div>
   );
 }
