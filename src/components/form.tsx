@@ -9,7 +9,7 @@ export default function Form(props: IFormProps) {
     <form
       onSubmit={(e) => e.preventDefault()}
       id={props.id}
-      className="bg-white p-4 rounded-lg max-w-[450px] border-solid border-2 border-[#D0D1D5]"
+      className="bg-white rounded-lg  border-solid border-2 border-[#D0D1D5] md:p-5 p-2  "
     >
       <h2 className="mb-3 font-bold text-lg">{props.title}</h2>
       {props.children}

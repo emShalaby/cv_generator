@@ -3,6 +3,7 @@ interface IInput {
   type?: React.HTMLInputTypeAttribute;
   label?: string;
   className?: string;
+  onChange?: any;
 }
 export default function Input(props: IInput) {
   return (
@@ -11,7 +12,8 @@ export default function Input(props: IInput) {
       <input
         type={props.type}
         id={props.id}
-        className={`bg-[#EFF0F3] rounded-md px-2 text-sm py-1 ${props.className || ""}`}
+        className={`bg-[#EFF0F3] rounded-md px-2 text-sm py-1 flex ${props.className || ""}`}
+        onChange={props.onChange}
       ></input>
     </div>
   );
