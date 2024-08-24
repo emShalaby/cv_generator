@@ -135,7 +135,7 @@ const App = () => {
             <Input
               label={"Phone number"}
               type={"tel"}
-              name={PersonalInfoFields.fullName}
+              name={PersonalInfoFields.phoneNumber}
               onChange={handlePersonalInfoChange}
             />
             <Input
