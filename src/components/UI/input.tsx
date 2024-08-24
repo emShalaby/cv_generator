@@ -3,7 +3,7 @@ interface IInput {
   type?: React.HTMLInputTypeAttribute;
   label?: string;
   className?: string;
-  onChange?: any;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 export default function Input(props: IInput) {
   return (
