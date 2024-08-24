@@ -12,8 +12,8 @@ function CvExperience(props: TExperience) {}
 
 export default function CvBody({ education, experience }: ICvBodyProps) {
   return (
-    <div className="flex flex-col flex-[10]">
-      <div className="bg-gray-300 justify-center flex mt-4 text-xl font-bold ">
+    <div className="flex flex-col flex-[10] bg-white p-10">
+      <div className="bg-gray-200 justify-center flex mt-4 text-xl font-bold ">
         <h2>Education</h2>
       </div>
       <div id="education">
@@ -34,7 +34,7 @@ export default function CvBody({ education, experience }: ICvBodyProps) {
           );
         })}
       </div>
-      <div className="bg-gray-300 justify-center flex mt-4 text-xl font-bold">
+      <div className="bg-gray-200 justify-center flex mt-4 text-xl font-bold">
         <h2>Experience</h2>
       </div>
       <div id="experience">

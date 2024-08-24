@@ -162,14 +162,12 @@ const App = () => {
               <Input
                 label={"Start Date"}
                 type={"date"}
-                className=""
                 name={EducationFields.startDate}
                 onChange={handleEducationInfoChange}
               />
               <Input
                 label={"End Date"}
                 type="date"
-                className=""
                 name={EducationFields.endDate}
                 onChange={handleEducationInfoChange}
               />
@@ -177,7 +175,7 @@ const App = () => {
             <Input
               label="Location"
               type="text"
-              name={EducationFields.endDate}
+              name={EducationFields.location}
               onChange={handleEducationInfoChange}
             />
             <Button
