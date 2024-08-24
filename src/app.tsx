@@ -161,13 +161,13 @@ const App = () => {
             <div className="flex gap-4">
               <Input
                 label={"Start Date"}
-                type={"date"}
+                type="text"
                 name={EducationFields.startDate}
                 onChange={handleEducationInfoChange}
               />
               <Input
                 label={"End Date"}
-                type="date"
+                type="text"
                 name={EducationFields.endDate}
                 onChange={handleEducationInfoChange}
               />
@@ -199,14 +199,14 @@ const App = () => {
             <div className="flex gap-4">
               <Input
                 label={"Start Date"}
-                type={"date"}
+                type={"text"}
                 className="flex-1"
                 name={ExperienceFields.startDate}
                 onChange={handlExperienceInfoChange}
               />
               <Input
                 label={"End Date"}
-                type="date"
+                type="text"
                 className="flex-1 "
                 name={ExperienceFields.endDate}
                 onChange={handlExperienceInfoChange}
