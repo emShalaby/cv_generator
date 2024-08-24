@@ -1,16 +1,16 @@
-import { IEducation, IExperience } from "../../app";
+import { TEducation, TExperience } from "../../app";
 
-interface ICvBody {
-  education?: IEducation[];
-  experience?: IExperience[];
+interface ICvBodyProps {
+  education?: TEducation[];
+  experience?: TExperience[];
 }
 
-function CvEducation(props: IEducation) {
+function CvEducation(props: TEducation) {
   return <div></div>;
 }
-function CvExperience(props: IExperience) {}
+function CvExperience(props: TExperience) {}
 
-export default function CvBody({ education }: ICvBody) {
+export default function CvBody({ education, experience }: ICvBodyProps) {
   return (
     <div className="flex flex-col flex-[10]">
       <div className="bg-gray-300 justify-center flex mt-4 text-xl font-bold ">
@@ -36,6 +36,32 @@ export default function CvBody({ education }: ICvBody) {
       </div>
       <div className="bg-gray-300 justify-center flex mt-4 text-xl font-bold">
         <h2>Experience</h2>
+      </div>
+      <div id="experience">
+        {experience?.map((item, index) => {
+          const {
+            workplaceName,
+            position,
+            location,
+            endDate,
+            startDate,
+            description,
+          } = item;
+          return (
+            <div className="flex gap-3" key={index}>
+              <div className="flex flex-col">
+                {workplaceName}
+                {endDate}
+                {description}
+              </div>
+              <div className="flex flex-col">
+                {location}
+                {position}
+                {startDate}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -7,35 +7,44 @@ import "../styles/main.css";
 import React, { useState } from "react";
 import CvBody from "./components/CV/cvBody";
 import Button from "./components/UI/button";
-interface IPersonalInfo {
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  address: string;
+enum PersonalInfoFields {
+  fullName = "fullName",
+  phoneNumber = "phoneNumber",
+  email = "email",
+  address = "address",
 }
-export interface IEducation {
-  school: string;
-  degree: string;
-  startDate: string;
-  endDate: string;
-  location: string;
+enum EducationFields {
+  school = "school",
+  degree = "degree",
+  startDate = "startDate",
+  endDate = "endDate",
+  location = "location",
 }
-export interface IExperience {
-  workplaceName: string;
-  position: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-  description: string;
+enum ExperienceFields {
+  workplaceName = "workplaceName",
+  position = "position",
+  startDate = "startDate",
+  endDate = "endDate",
+  location = "location",
+  description = "description",
 }
+type TPersonalInfo = Record<PersonalInfoFields, string>;
+export type TEducation = Record<EducationFields, string>;
+export type TExperience = Record<ExperienceFields, string>;
+
 interface IFormData {
-  personalInfo: IPersonalInfo;
-  education: IEducation[];
-  workExperience: IExperience[];
+  personalInfo: TPersonalInfo;
+  education: TEducation[];
+  experience: TExperience[];
 }
 const App = () => {
   const [formData, setFormData] = useState<IFormData>({
-    personalInfo: { fullName: "", phoneNumber: "", email: "", address: "" },
+    personalInfo: {
+      [PersonalInfoFields.fullName]: "",
+      phoneNumber: "",
+      email: "",
+      address: "",
+    },
     education: [
       {
         school: "",
@@ -45,7 +54,7 @@ const App = () => {
         location: "",
       },
     ],
-    workExperience: [
+    experience: [
       {
         workplaceName: "",
         position: "",
@@ -63,7 +72,7 @@ const App = () => {
           ...prevData,
           personalInfo: {
             ...prevData.personalInfo,
-            [e.target.id]: e.target.value, //why did we use square brackets instead of curly ones
+            [e.target.name]: e.target.value,
           },
         };
       }
@@ -80,7 +89,23 @@ const App = () => {
           ...prevData,
 
           education: [
-            { ...prevData.education[0], [e.target.id]: e.target.value },
+            { ...prevData.education[0], [e.target.name]: e.target.value },
+          ],
+        };
+      }
+      return prevData;
+    });
+  };
+  const handlExperienceInfoChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFormData((prevData) => {
+      if (prevData) {
+        return {
+          ...prevData,
+
+          experience: [
+            { ...prevData.experience[0], [e.target.name]: e.target.value },
           ],
         };
       }
@@ -98,25 +123,25 @@ const App = () => {
             <Input
               label={"Full name"}
               type={"Text"}
-              id="fullName"
+              name={PersonalInfoFields.fullName}
               onChange={handlePersonalInfoChange}
             />
             <Input
               label={"Email"}
               type={"Email"}
-              id="email"
+              name={PersonalInfoFields.email}
               onChange={handlePersonalInfoChange}
             />
             <Input
               label={"Phone number"}
               type={"tel"}
-              id="phoneNumber"
+              name={PersonalInfoFields.fullName}
               onChange={handlePersonalInfoChange}
             />
             <Input
               label={"Addresss"}
               type="text"
-              id="address"
+              name={PersonalInfoFields.address}
               onChange={handlePersonalInfoChange}
             />
           </Form>
@@ -124,13 +149,13 @@ const App = () => {
             <Input
               label={"School"}
               type={"Text"}
-              id="school"
+              name={EducationFields.school}
               onChange={handleEducationInfoChange}
             />
             <Input
               label={"Degree"}
               type={"text"}
-              id="degree"
+              name={EducationFields.degree}
               onChange={handleEducationInfoChange}
             />
             <div className="flex gap-4">
@@ -138,21 +163,21 @@ const App = () => {
                 label={"Start Date"}
                 type={"date"}
                 className=""
-                id="startDate"
+                name={EducationFields.startDate}
                 onChange={handleEducationInfoChange}
               />
               <Input
                 label={"End Date"}
                 type="date"
                 className=""
-                id="endDate"
+                name={EducationFields.endDate}
                 onChange={handleEducationInfoChange}
               />
             </div>
             <Input
               label="Location"
               type="text"
-              id="location"
+              name={EducationFields.endDate}
               onChange={handleEducationInfoChange}
             />
             <Button
@@ -161,14 +186,46 @@ const App = () => {
             ></Button>
           </Form>
           <Form title={"Experience"} id="experience">
-            <Input label={"Workplace Name"} type={"Text"} />
-            <Input label={"Position Title"} type={"text"} />
+            <Input
+              label={"Workplace Name"}
+              type={"Text"}
+              onChange={handlExperienceInfoChange}
+              name={ExperienceFields.workplaceName}
+            />
+            <Input
+              label={"Position Title"}
+              type={"text"}
+              onChange={handlExperienceInfoChange}
+              name={ExperienceFields.position}
+            />
             <div className="flex gap-4">
-              <Input label={"Start Date"} type={"date"} className="flex-1" />
-              <Input label={"End Date"} type="date" className="flex-1 " />
+              <Input
+                label={"Start Date"}
+                type={"date"}
+                className="flex-1"
+                name={ExperienceFields.startDate}
+                onChange={handlExperienceInfoChange}
+              />
+              <Input
+                label={"End Date"}
+                type="date"
+                className="flex-1 "
+                name={ExperienceFields.endDate}
+                onChange={handlExperienceInfoChange}
+              />
             </div>
-            <Input label={"Location"} type={"text"} />
-            <Input label={"Description"} type={"text"} />
+            <Input
+              label={"Location"}
+              type={"text"}
+              name={ExperienceFields.location}
+              onChange={handlExperienceInfoChange}
+            />
+            <Input
+              label={"Description"}
+              type={"text"}
+              name={ExperienceFields.description}
+              onChange={handlExperienceInfoChange}
+            />
           </Form>
         </section>{" "}
         <section
@@ -181,7 +238,10 @@ const App = () => {
             phone={formData.personalInfo.phoneNumber}
             address={formData.personalInfo.address}
           ></CvHeader>
-          <CvBody education={formData.education} />
+          <CvBody
+            education={formData.education}
+            experience={formData.experience}
+          />
         </section>
       </main>
       <footer></footer>
