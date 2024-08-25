@@ -31,7 +31,24 @@ enum ExperienceFields {
 type TPersonalInfo = Record<PersonalInfoFields, string>;
 export type TEducation = Record<EducationFields, string>;
 export type TExperience = Record<ExperienceFields, string>;
-
+const placeHolderValues = {
+  name: "Josephine Meyers",
+  email: "josephine.meyers@mail.co.uk",
+  phone: "+44 3245 5521 5521",
+  address: "London, UK",
+  school: "London City University",
+  degree: "Bachelors in Economics",
+  eduStartDate: "08/2020",
+  eduEndDate: "present",
+  eduLocation: "New York City, US",
+  workplaceName: "Umbrella Inc.",
+  position: "UX & UI Designer",
+  workStartDate: "08/2020",
+  workEndDate: "present",
+  workLocation: "New York City, US",
+  description:
+    "Designed and prototyped user interface patterns for various clients in various industries, ranging from self-service apps within the telecommunications-sector to mobile games for IOS and Android",
+};
 interface IFormData {
   personalInfo: TPersonalInfo;
   education: TEducation[];
@@ -40,28 +57,28 @@ interface IFormData {
 const App = () => {
   const [formData, setFormData] = useState<IFormData>({
     personalInfo: {
-      [PersonalInfoFields.fullName]: "",
-      phoneNumber: "",
-      email: "",
-      address: "",
+      [PersonalInfoFields.fullName]: placeHolderValues.name,
+      [PersonalInfoFields.phoneNumber]: placeHolderValues.phone,
+      [PersonalInfoFields.address]: placeHolderValues.address,
+      [PersonalInfoFields.email]: placeHolderValues.email,
     },
     education: [
       {
-        school: "",
-        degree: "",
-        startDate: "",
-        endDate: "",
-        location: "",
+        [EducationFields.school]: placeHolderValues.school,
+        [EducationFields.degree]: placeHolderValues.degree,
+        [EducationFields.startDate]: placeHolderValues.eduStartDate,
+        [EducationFields.endDate]: placeHolderValues.eduEndDate,
+        [EducationFields.location]: placeHolderValues.eduLocation,
       },
     ],
     experience: [
       {
-        workplaceName: "",
-        position: "",
-        startDate: "",
-        endDate: "",
-        location: "",
-        description: "",
+        [ExperienceFields.workplaceName]: placeHolderValues.workplaceName,
+        [ExperienceFields.position]: placeHolderValues.position,
+        [ExperienceFields.startDate]: placeHolderValues.workStartDate,
+        [ExperienceFields.endDate]: placeHolderValues.workEndDate,
+        [ExperienceFields.description]: placeHolderValues.description,
+        [ExperienceFields.location]: placeHolderValues.workLocation,
       },
     ],
   });
@@ -81,7 +98,7 @@ const App = () => {
   };
 
   const handleEducationInfoChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setFormData((prevData) => {
       if (prevData) {
@@ -97,7 +114,7 @@ const App = () => {
     });
   };
   const handlExperienceInfoChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setFormData((prevData) => {
       if (prevData) {
@@ -113,11 +130,11 @@ const App = () => {
     });
   };
   return (
-    <div className="bg-[#EFF0F3]  min-w-[800px]  " id="app">
-      <main className="flex p-10 gap-[5px] 2xl:justify-center  ">
+    <div className="min-w-[800px] bg-[#EFF0F3]" id="app">
+      <main className="flex gap-[20px] p-10 2xl:justify-center">
         <section
           id="cv-input"
-          className=" flex flex-col gap-5  max-w-[505px] flex-1  "
+          className="flex max-w-[505px] flex-1 flex-col gap-5"
         >
           <Form title={"Personal information"} id="personalInfo">
             <Input
@@ -125,24 +142,28 @@ const App = () => {
               type={"Text"}
               name={PersonalInfoFields.fullName}
               onChange={handlePersonalInfoChange}
+              value={formData.personalInfo.fullName}
             />
             <Input
               label={"Email"}
               type={"Email"}
               name={PersonalInfoFields.email}
               onChange={handlePersonalInfoChange}
+              value={formData.personalInfo.email}
             />
             <Input
               label={"Phone number"}
               type={"tel"}
               name={PersonalInfoFields.phoneNumber}
               onChange={handlePersonalInfoChange}
+              value={formData.personalInfo.phoneNumber}
             />
             <Input
               label={"Addresss"}
               type="text"
               name={PersonalInfoFields.address}
               onChange={handlePersonalInfoChange}
+              value={formData.personalInfo.address}
             />
           </Form>
           <Form title={"Education"} id="education">
@@ -151,12 +172,14 @@ const App = () => {
               type={"Text"}
               name={EducationFields.school}
               onChange={handleEducationInfoChange}
+              value={formData.education[0].school}
             />
             <Input
               label={"Degree"}
               type={"text"}
               name={EducationFields.degree}
               onChange={handleEducationInfoChange}
+              value={formData.education[0].degree}
             />
             <div className="flex gap-4">
               <Input
@@ -164,12 +187,14 @@ const App = () => {
                 type="text"
                 name={EducationFields.startDate}
                 onChange={handleEducationInfoChange}
+                value={formData.education[0].startDate}
               />
               <Input
                 label={"End Date"}
                 type="text"
                 name={EducationFields.endDate}
                 onChange={handleEducationInfoChange}
+                value={formData.education[0].endDate}
               />
             </div>
             <Input
@@ -177,10 +202,11 @@ const App = () => {
               type="text"
               name={EducationFields.location}
               onChange={handleEducationInfoChange}
+              value={formData.education[0].location}
             />
             <Button
               title="Save"
-              className="bg-blue-400 text-white px-3 py-1 self-end mt-3 rounded-md"
+              className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
             ></Button>
           </Form>
           <Form title={"Experience"} id="experience">
@@ -189,12 +215,14 @@ const App = () => {
               type={"Text"}
               onChange={handlExperienceInfoChange}
               name={ExperienceFields.workplaceName}
+              value={formData.experience[0].workplaceName}
             />
             <Input
               label={"Position Title"}
               type={"text"}
               onChange={handlExperienceInfoChange}
               name={ExperienceFields.position}
+              value={formData.experience[0].position}
             />
             <div className="flex gap-4">
               <Input
@@ -203,13 +231,15 @@ const App = () => {
                 className="flex-1"
                 name={ExperienceFields.startDate}
                 onChange={handlExperienceInfoChange}
+                value={formData.experience[0].startDate}
               />
               <Input
                 label={"End Date"}
                 type="text"
-                className="flex-1 "
+                className="flex-1"
                 name={ExperienceFields.endDate}
                 onChange={handlExperienceInfoChange}
+                value={formData.experience[0].endDate}
               />
             </div>
             <Input
@@ -217,18 +247,20 @@ const App = () => {
               type={"text"}
               name={ExperienceFields.location}
               onChange={handlExperienceInfoChange}
+              value={formData.experience[0].location}
             />
             <Input
               label={"Description"}
               type={"text"}
               name={ExperienceFields.description}
               onChange={handlExperienceInfoChange}
+              value={formData.experience[0].description}
             />
           </Form>
         </section>{" "}
         <section
           id="cv-output"
-          className=" min-w-[440px] flex-[3] max-w-[850px] flex flex-col"
+          className="flex min-w-[440px] max-w-[850px] flex-[3] flex-col"
         >
           <CvHeader
             name={formData.personalInfo.fullName}
@@ -252,6 +284,6 @@ if (DOCUMENT) {
   createRoot(DOCUMENT).render(
     <StrictMode>
       <App />
-    </StrictMode>
+    </StrictMode>,
   );
 }

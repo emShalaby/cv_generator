@@ -11,9 +11,9 @@ export default function CvHeader({
   address,
 }: IHeaderProps) {
   return (
-    <div className="bg-[#0E374E] flex flex-col min-h-[150px] flex-1 justify-center place-items-center">
-      <h1 className="text-3xl font-bold text-white mb-3">{name}</h1>
-      <div className="flex gap-3 text-white font-semibold text-lg">
+    <div className="flex min-h-[150px] flex-1 flex-col place-items-center justify-center bg-[#0E374E]">
+      <h1 className="mb-3 text-3xl font-bold text-white">{name}</h1>
+      <div className="flex gap-3 text-lg font-semibold text-white">
         <p className="">{email}</p>
         <p className=""> {phone}</p>
         <p className="">{address}</p>

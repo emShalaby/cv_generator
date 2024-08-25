@@ -27,7 +27,7 @@ export default function CvBody({ education, experience }: ICvBodyProps) {
                 </p>
                 <p className="break-words">{location}</p>
               </div>
-              <div className="w-[300px]">
+              <div className="w-[100%]">
                 <p className="min-h-[30px] break-words text-lg font-bold">
                   {school}
                 </p>
@@ -59,7 +59,7 @@ export default function CvBody({ education, experience }: ICvBodyProps) {
                 <p className="break-words">{location}</p>
               </div>
 
-              <div className="w-[300px]">
+              <div className="w-[100%]">
                 <p className="min-h-[30px] break-words text-lg font-bold">
                   {workplaceName}
                 </p>
