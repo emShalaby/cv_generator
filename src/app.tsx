@@ -7,6 +7,7 @@ import "../styles/main.css";
 import React, { useState } from "react";
 import CvBody from "./components/CV/cvBody";
 import Button from "./components/UI/button";
+import TextArea from "./components/UI/textArea";
 enum PersonalInfoFields {
   fullName = "fullName",
   phoneNumber = "phoneNumber",
@@ -114,7 +115,9 @@ const App = () => {
     });
   };
   const handlExperienceInfoChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setFormData((prevData) => {
       if (prevData) {
@@ -249,13 +252,17 @@ const App = () => {
               onChange={handlExperienceInfoChange}
               value={formData.experience[0].location}
             />
-            <Input
+            <TextArea
               label={"Description"}
-              type={"text"}
               name={ExperienceFields.description}
               onChange={handlExperienceInfoChange}
               value={formData.experience[0].description}
+              className="resize-y"
             />
+            <Button
+              title="Save"
+              className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+            ></Button>
           </Form>
         </section>{" "}
         <section
