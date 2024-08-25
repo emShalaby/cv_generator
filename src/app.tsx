@@ -8,6 +8,8 @@ import React, { useState } from "react";
 import CvBody from "./components/CV/cvBody";
 import Button from "./components/UI/button";
 import TextArea from "./components/UI/textArea";
+import { v4 as uuidv4 } from "uuid";
+
 enum PersonalInfoFields {
   fullName = "fullName",
   phoneNumber = "phoneNumber",
@@ -28,6 +30,7 @@ enum ExperienceFields {
   endDate = "endDate",
   location = "location",
   description = "description",
+  id = "id",
 }
 type TPersonalInfo = Record<PersonalInfoFields, string>;
 export type TEducation = Record<EducationFields, string>;
@@ -80,9 +83,12 @@ const App = () => {
         [ExperienceFields.endDate]: placeHolderValues.workEndDate,
         [ExperienceFields.description]: placeHolderValues.description,
         [ExperienceFields.location]: placeHolderValues.workLocation,
+        [ExperienceFields.id]: String(uuidv4()),
       },
     ],
   });
+  const [selectedExpItem, setSelectedExpItem] =
+    useState<null | Partial<TExperience>>(null);
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => {
       if (prevData) {
@@ -115,18 +121,22 @@ const App = () => {
     });
   };
   const handlExperienceInfoChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData((prevData) => {
-      if (prevData) {
+      if (prevData && selectedExpItem) {
+        const selectedItemIndex = prevData.experience.findIndex(
+          (item) => item.id === selectedExpItem.id,
+        );
+        const clonedExperience = [...prevData.experience];
+        clonedExperience[selectedItemIndex] = {
+          ...clonedExperience[selectedItemIndex],
+          [e.target.name]: e.target.value,
+        };
         return {
           ...prevData,
 
-          experience: [
-            { ...prevData.experience[0], [e.target.name]: e.target.value },
-          ],
+          experience: clonedExperience,
         };
       }
       return prevData;
@@ -196,7 +206,9 @@ const App = () => {
                 label={"End Date"}
                 type="text"
                 name={EducationFields.endDate}
-                onChange={handleEducationInfoChange}
+                onChange={(e) => {
+                  handleEducationInfoChange(e);
+                }}
                 value={formData.education[0].endDate}
               />
             </div>
@@ -212,58 +224,93 @@ const App = () => {
               className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
             ></Button>
           </Form>
-          <Form title={"Experience"} id="experience">
-            <Input
-              label={"Workplace Name"}
-              type={"Text"}
-              onChange={handlExperienceInfoChange}
-              name={ExperienceFields.workplaceName}
-              value={formData.experience[0].workplaceName}
-            />
-            <Input
-              label={"Position Title"}
-              type={"text"}
-              onChange={handlExperienceInfoChange}
-              name={ExperienceFields.position}
-              value={formData.experience[0].position}
-            />
-            <div className="flex gap-4">
-              <Input
-                label={"Start Date"}
-                type={"text"}
-                className="flex-1"
-                name={ExperienceFields.startDate}
-                onChange={handlExperienceInfoChange}
-                value={formData.experience[0].startDate}
-              />
-              <Input
-                label={"End Date"}
-                type="text"
-                className="flex-1"
-                name={ExperienceFields.endDate}
-                onChange={handlExperienceInfoChange}
-                value={formData.experience[0].endDate}
+          {!selectedExpItem ? (
+            <div>
+              {formData.experience.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <div onClick={() => setSelectedExpItem(item)}>
+                      {item.workplaceName}
+                    </div>
+                  </div>
+                );
+              })}
+              <Button
+                title="Add"
+                onclick={() => {
+                  formData.experience.push({
+                    [ExperienceFields.workplaceName]: "",
+                    [ExperienceFields.position]: "",
+                    [ExperienceFields.startDate]: "",
+                    [ExperienceFields.endDate]: "",
+                    [ExperienceFields.description]: "",
+                    [ExperienceFields.location]: "",
+                    [ExperienceFields.id]: String(uuidv4()),
+                  });
+                  setSelectedExpItem(
+                    formData.experience[formData.experience.length - 1],
+                  );
+                }}
               />
             </div>
-            <Input
-              label={"Location"}
-              type={"text"}
-              name={ExperienceFields.location}
-              onChange={handlExperienceInfoChange}
-              value={formData.experience[0].location}
-            />
-            <TextArea
-              label={"Description"}
-              name={ExperienceFields.description}
-              onChange={handlExperienceInfoChange}
-              value={formData.experience[0].description}
-              className="resize-y"
-            />
-            <Button
-              title="Save"
-              className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-            ></Button>
-          </Form>
+          ) : (
+            <Form title={"Experience"} id="experience">
+              <Input
+                label={"Workplace Name"}
+                type={"Text"}
+                onChange={handlExperienceInfoChange}
+                name={ExperienceFields.workplaceName}
+                value={selectedExpItem.workplaceName}
+              />
+              <Input
+                label={"Position Title"}
+                type={"text"}
+                onChange={handlExperienceInfoChange}
+                name={ExperienceFields.position}
+                value={selectedExpItem.position}
+              />
+              <div className="flex gap-4">
+                <Input
+                  label={"Start Date"}
+                  type={"text"}
+                  className="flex-1"
+                  name={ExperienceFields.startDate}
+                  onChange={handlExperienceInfoChange}
+                  value={selectedExpItem.startDate}
+                />
+                <Input
+                  label={"End Date"}
+                  type="text"
+                  className="flex-1"
+                  name={ExperienceFields.endDate}
+                  onChange={handlExperienceInfoChange}
+                  value={selectedExpItem.endDate}
+                />
+              </div>
+              <Input
+                label={"Location"}
+                type={"text"}
+                name={ExperienceFields.location}
+                onChange={handlExperienceInfoChange}
+                value={selectedExpItem.location}
+              />
+              <TextArea
+                label={"Description"}
+                name={ExperienceFields.description}
+                onChange={handlExperienceInfoChange}
+                value={selectedExpItem.description}
+                className="resize-y"
+              />
+              <Button
+                title="Save"
+                className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                onclick={() => {
+                  formData.experience.push();
+                  setSelectedExpItem(null);
+                }}
+              />
+            </Form>
+          )}
         </section>{" "}
         <section
           id="cv-output"

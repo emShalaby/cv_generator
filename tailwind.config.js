@@ -6,6 +6,15 @@ export default {
       screens: {
         "2xl": "1700px",
       },
+      keyframes: {
+        expand: {
+          "0%": { transform: "scaleY(0)" },
+          "100%": { transform: "scaleY(1)" },
+        },
+      },
+      animeation: {
+        expand: "expand 1s ease-in-out",
+      },
     },
   },
   plugins: [],

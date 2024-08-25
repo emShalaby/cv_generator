@@ -5,7 +5,6 @@ interface IInput {
   label?: string;
   className?: string;
   value?: string;
-
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
