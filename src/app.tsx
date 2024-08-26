@@ -1,11 +1,8 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
 import Input from "./components/UI/input";
 import Form from "./components/UI/form";
-import CvHeader from "./components/CV/cvHeader";
 import "../styles/main.css";
 import React, { useState } from "react";
-import CvBody from "./components/CV/cvBody";
+import CV from "./components/CV/CV";
 import Button from "./components/UI/button";
 import TextArea from "./components/UI/textArea";
 import { v4 as uuidv4 } from "uuid";
@@ -37,15 +34,15 @@ type TPersonalInfo = Record<PersonalInfoFields, string>;
 export type TEducation = Record<EducationFields, string>;
 export type TExperience = Record<ExperienceFields, string>;
 const placeHolderValues = {
-  name: "Josephine Meyers",
-  email: "josephine.meyers@mail.co.uk",
-  phone: "+44 3245 5521 5521",
-  address: "London, UK",
-  school: "London City University",
-  degree: "Bachelors in Economics",
-  eduStartDate: "08/2020",
-  eduEndDate: "present",
-  eduLocation: "New York City, US",
+  name: "Mohammed Shalaby",
+  email: "mohammed.shalaby@mail.co.eg",
+  phone: "+20 3245 5521 5521",
+  address: "Mansoura, EG",
+  school: "Mansoura University",
+  degree: "Bachelors in Mechanical Engineering",
+  eduStartDate: "08/2019",
+  eduEndDate: "08/2024",
+  eduLocation: "Mansoura, EG",
   workplaceName: "Umbrella Inc.",
   position: "UX & UI Designer",
   workStartDate: "08/2020",
@@ -54,12 +51,12 @@ const placeHolderValues = {
   description:
     "Designed and prototyped user interface patterns for various clients in various industries, ranging from self-service apps within the telecommunications-sector to mobile games for IOS and Android",
 };
-interface IFormData {
+export interface IFormData {
   personalInfo: TPersonalInfo;
   education: TEducation[];
   experience: TExperience[];
 }
-const App = () => {
+export const App = () => {
   const [formData, setFormData] = useState<IFormData>({
     personalInfo: {
       [PersonalInfoFields.fullName]: placeHolderValues.name,
@@ -89,10 +86,12 @@ const App = () => {
       },
     ],
   });
-  const [selectedExpItem, setSelectedExpItem] =
-    useState<null | Partial<TExperience>>(null);
-  const [selectedEduItem, setSelectedEduItem] =
-    useState<null | Partial<TEducation>>(null);
+  const [selectedExpItem, setSelectedExpItem] = useState<null | TExperience>(
+    null,
+  );
+  const [selectedEduItem, setSelectedEduItem] = useState<null | TEducation>(
+    null,
+  );
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => {
       if (prevData) {
@@ -130,6 +129,21 @@ const App = () => {
       return prevData;
     });
   };
+  const deleteSelectedEduItem = () => {
+    setFormData((prevData) => {
+      if (prevData && selectedEduItem) {
+        const clonedEducation = [...prevData.education];
+
+        clonedEducation.splice(clonedEducation.indexOf(selectedEduItem), 1);
+        return {
+          ...prevData,
+
+          education: clonedEducation,
+        };
+      }
+      return prevData;
+    });
+  };
   const handlExperienceInfoChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -152,6 +166,21 @@ const App = () => {
       return prevData;
     });
   };
+  const deleteSelectedExpItem = () => {
+    setFormData((prevData) => {
+      if (prevData && selectedExpItem) {
+        const clonedExperience = [...prevData.experience];
+
+        clonedExperience.splice(clonedExperience.indexOf(selectedExpItem), 1);
+        return {
+          ...prevData,
+
+          experience: clonedExperience,
+        };
+      }
+      return prevData;
+    });
+  };
   return (
     <div className="min-w-[800px] bg-[#EFF0F3]" id="app">
       <main className="flex gap-[20px] p-10 2xl:justify-center">
@@ -159,44 +188,49 @@ const App = () => {
           id="cv-input"
           className="flex max-w-[505px] flex-1 flex-col gap-5"
         >
-          <Form id="personalInfo">
-            <Input
-              label={"Full name"}
-              type={"Text"}
-              name={PersonalInfoFields.fullName}
-              onChange={handlePersonalInfoChange}
-              value={formData.personalInfo.fullName}
-            />
-            <Input
-              label={"Email"}
-              type={"Email"}
-              name={PersonalInfoFields.email}
-              onChange={handlePersonalInfoChange}
-              value={formData.personalInfo.email}
-            />
-            <Input
-              label={"Phone number"}
-              type={"tel"}
-              name={PersonalInfoFields.phoneNumber}
-              onChange={handlePersonalInfoChange}
-              value={formData.personalInfo.phoneNumber}
-            />
-            <Input
-              label={"Addresss"}
-              type="text"
-              name={PersonalInfoFields.address}
-              onChange={handlePersonalInfoChange}
-              value={formData.personalInfo.address}
-            />
-          </Form>
+          <Card title="Personal Details">
+            <Form id="personalInfo">
+              <Input
+                label={"Full name"}
+                type={"Text"}
+                name={PersonalInfoFields.fullName}
+                onChange={handlePersonalInfoChange}
+                value={formData.personalInfo.fullName}
+              />
+              <Input
+                label={"Email"}
+                type={"Email"}
+                name={PersonalInfoFields.email}
+                onChange={handlePersonalInfoChange}
+                value={formData.personalInfo.email}
+              />
+              <Input
+                label={"Phone number"}
+                type={"tel"}
+                name={PersonalInfoFields.phoneNumber}
+                onChange={handlePersonalInfoChange}
+                value={formData.personalInfo.phoneNumber}
+              />
+              <Input
+                label={"Addresss"}
+                type="text"
+                name={PersonalInfoFields.address}
+                onChange={handlePersonalInfoChange}
+                value={formData.personalInfo.address}
+              />
+            </Form>
+          </Card>
           {!selectedEduItem ? (
             <Card title="Education">
-              {formData.education.map((item, index) => {
+              {formData.education.map((item) => {
                 return (
-                  <div key={index}>
+                  <div key={uuidv4()}>
                     <div
                       className="mt-3 border-b-4 border-solid border-gray-100 p-2 text-lg font-semibold hover:cursor-pointer md:px-5 md:py-3"
-                      onClick={() => setSelectedEduItem(item)}
+                      onClick={() => {
+                        setSelectedEduItem(item);
+                        console.log("selected edu item:", item);
+                      }}
                     >
                       {item.school}
                     </div>
@@ -205,17 +239,27 @@ const App = () => {
               })}
               <button
                 onClick={() => {
-                  formData.education.push({
-                    [EducationFields.school]: "",
-                    [EducationFields.degree]: "",
-                    [EducationFields.startDate]: "",
-                    [EducationFields.endDate]: "",
-                    [EducationFields.location]: "",
-                    [EducationFields.id]: String(uuidv4()),
+                  const id = uuidv4();
+                  setFormData((prevData) => {
+                    if (prevData) {
+                      const clonedEducation = [...prevData.education];
+                      const newItem = {
+                        [EducationFields.school]: "",
+                        [EducationFields.degree]: "",
+                        [EducationFields.startDate]: "",
+                        [EducationFields.endDate]: "",
+                        [EducationFields.location]: "",
+                        [EducationFields.id]: id,
+                      };
+                      clonedEducation.push(newItem);
+                      setSelectedEduItem(newItem);
+                      return {
+                        ...prevData,
+                        education: clonedEducation,
+                      };
+                    }
+                    return prevData;
                   });
-                  setSelectedEduItem(
-                    formData.education[formData.education.length - 1],
-                  );
                 }}
                 className="m-5 self-center rounded-full border-4 border-solid bg-white px-4 py-[5px] text-sm font-bold text-black"
               >
@@ -264,22 +308,31 @@ const App = () => {
                   onChange={handleEducationInfoChange}
                   value={selectedEduItem.location}
                 />
-
-                <Button
-                  title="Save"
-                  className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-                  onclick={() => {
-                    setSelectedEduItem(null);
-                  }}
-                />
+                <div className="width-[100%] flex">
+                  <button
+                    className="mt-3 self-start rounded-md bg-red-500 px-3 py-1 text-white"
+                    onClick={() => {
+                      deleteSelectedEduItem();
+                      setSelectedEduItem(null);
+                    }}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="ml-auto mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                    onClick={() => setSelectedEduItem(null)}
+                  >
+                    Save
+                  </button>
+                </div>
               </Form>
             </Card>
           )}
           {!selectedExpItem ? (
             <Card title="Experience">
-              {formData.experience.map((item, index) => {
+              {formData.experience.map((item) => {
                 return (
-                  <div key={index}>
+                  <div key={uuidv4()}>
                     <div
                       className="mt-3 border-b-4 border-solid border-gray-100 p-2 text-lg font-semibold hover:cursor-pointer md:px-5 md:py-3"
                       onClick={() => setSelectedExpItem(item)}
@@ -291,18 +344,28 @@ const App = () => {
               })}
               <button
                 onClick={() => {
-                  formData.experience.push({
-                    [ExperienceFields.workplaceName]: "",
-                    [ExperienceFields.position]: "",
-                    [ExperienceFields.startDate]: "",
-                    [ExperienceFields.endDate]: "",
-                    [ExperienceFields.description]: "",
-                    [ExperienceFields.location]: "",
-                    [ExperienceFields.id]: String(uuidv4()),
+                  const id = uuidv4();
+                  setFormData((prevData) => {
+                    if (prevData) {
+                      const clonedExperience = [...prevData.experience];
+                      const newItem = {
+                        [ExperienceFields.description]: "",
+                        [ExperienceFields.endDate]: "",
+                        [ExperienceFields.startDate]: "",
+                        [ExperienceFields.position]: "",
+                        [ExperienceFields.location]: "",
+                        [ExperienceFields.workplaceName]: "",
+                        [ExperienceFields.id]: id,
+                      };
+                      clonedExperience.push(newItem);
+                      setSelectedExpItem(newItem);
+                      return {
+                        ...prevData,
+                        experience: clonedExperience,
+                      };
+                    }
+                    return prevData;
                   });
-                  setSelectedExpItem(
-                    formData.experience[formData.experience.length - 1],
-                  );
                 }}
                 className="m-5 self-center rounded-full border-4 border-solid bg-white px-4 py-[5px] text-sm font-bold text-black"
               >
@@ -358,13 +421,23 @@ const App = () => {
                   value={selectedExpItem.description}
                   className="resize-y"
                 />
-                <Button
-                  title="Save"
-                  className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-                  onclick={() => {
-                    setSelectedExpItem(null);
-                  }}
-                />
+                <div className="width-[100%] flex">
+                  <button
+                    className="mt-3 self-start rounded-md bg-red-500 px-3 py-1 text-white"
+                    onClick={() => {
+                      deleteSelectedExpItem();
+                      setSelectedExpItem(null);
+                    }}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="ml-auto mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                    onClick={() => setSelectedExpItem(null)}
+                  >
+                    Save
+                  </button>
+                </div>
               </Form>
             </Card>
           )}
@@ -373,28 +446,10 @@ const App = () => {
           id="cv-output"
           className="flex min-w-[440px] max-w-[850px] flex-[3] flex-col"
         >
-          <CvHeader
-            name={formData.personalInfo.fullName}
-            email={formData.personalInfo.email}
-            phone={formData.personalInfo.phoneNumber}
-            address={formData.personalInfo.address}
-          ></CvHeader>
-          <CvBody
-            education={formData.education}
-            experience={formData.experience}
-          />
+          <CV Data={formData} />
         </section>
       </main>
       <footer></footer>
     </div>
   );
 };
-
-const DOCUMENT = document.getElementById("root");
-if (DOCUMENT) {
-  createRoot(DOCUMENT).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
-}
