@@ -9,7 +9,7 @@ import CvBody from "./components/CV/cvBody";
 import Button from "./components/UI/button";
 import TextArea from "./components/UI/textArea";
 import { v4 as uuidv4 } from "uuid";
-
+import Card from "./components/UI/card";
 enum PersonalInfoFields {
   fullName = "fullName",
   phoneNumber = "phoneNumber",
@@ -22,6 +22,7 @@ enum EducationFields {
   startDate = "startDate",
   endDate = "endDate",
   location = "location",
+  id = "id",
 }
 enum ExperienceFields {
   workplaceName = "workplaceName",
@@ -73,6 +74,7 @@ const App = () => {
         [EducationFields.startDate]: placeHolderValues.eduStartDate,
         [EducationFields.endDate]: placeHolderValues.eduEndDate,
         [EducationFields.location]: placeHolderValues.eduLocation,
+        [EducationFields.id]: String(uuidv4()),
       },
     ],
     experience: [
@@ -89,6 +91,8 @@ const App = () => {
   });
   const [selectedExpItem, setSelectedExpItem] =
     useState<null | Partial<TExperience>>(null);
+  const [selectedEduItem, setSelectedEduItem] =
+    useState<null | Partial<TEducation>>(null);
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => {
       if (prevData) {
@@ -105,16 +109,22 @@ const App = () => {
   };
 
   const handleEducationInfoChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData((prevData) => {
-      if (prevData) {
+      if (prevData && selectedEduItem) {
+        const selectedItemIndex = prevData.education.findIndex(
+          (item) => item.id === selectedEduItem.id,
+        );
+        const clonedEducation = [...prevData.education];
+        clonedEducation[selectedItemIndex] = {
+          ...clonedEducation[selectedItemIndex],
+          [e.target.name]: e.target.value,
+        };
         return {
           ...prevData,
 
-          education: [
-            { ...prevData.education[0], [e.target.name]: e.target.value },
-          ],
+          education: clonedEducation,
         };
       }
       return prevData;
@@ -149,7 +159,7 @@ const App = () => {
           id="cv-input"
           className="flex max-w-[505px] flex-1 flex-col gap-5"
         >
-          <Form title={"Personal information"} id="personalInfo">
+          <Form id="personalInfo">
             <Input
               label={"Full name"}
               type={"Text"}
@@ -179,65 +189,108 @@ const App = () => {
               value={formData.personalInfo.address}
             />
           </Form>
-          <Form title={"Education"} id="education">
-            <Input
-              label={"School"}
-              type={"Text"}
-              name={EducationFields.school}
-              onChange={handleEducationInfoChange}
-              value={formData.education[0].school}
-            />
-            <Input
-              label={"Degree"}
-              type={"text"}
-              name={EducationFields.degree}
-              onChange={handleEducationInfoChange}
-              value={formData.education[0].degree}
-            />
-            <div className="flex gap-4">
-              <Input
-                label={"Start Date"}
-                type="text"
-                name={EducationFields.startDate}
-                onChange={handleEducationInfoChange}
-                value={formData.education[0].startDate}
-              />
-              <Input
-                label={"End Date"}
-                type="text"
-                name={EducationFields.endDate}
-                onChange={(e) => {
-                  handleEducationInfoChange(e);
+          {!selectedEduItem ? (
+            <Card title="Education">
+              {formData.education.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <div
+                      className="mt-3 border-b-4 border-solid border-gray-100 p-2 text-lg font-semibold hover:cursor-pointer md:px-5 md:py-3"
+                      onClick={() => setSelectedEduItem(item)}
+                    >
+                      {item.school}
+                    </div>
+                  </div>
+                );
+              })}
+              <button
+                onClick={() => {
+                  formData.education.push({
+                    [EducationFields.school]: "",
+                    [EducationFields.degree]: "",
+                    [EducationFields.startDate]: "",
+                    [EducationFields.endDate]: "",
+                    [EducationFields.location]: "",
+                    [EducationFields.id]: String(uuidv4()),
+                  });
+                  setSelectedEduItem(
+                    formData.education[formData.education.length - 1],
+                  );
                 }}
-                value={formData.education[0].endDate}
-              />
-            </div>
-            <Input
-              label="Location"
-              type="text"
-              name={EducationFields.location}
-              onChange={handleEducationInfoChange}
-              value={formData.education[0].location}
-            />
-            <Button
-              title="Save"
-              className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-            ></Button>
-          </Form>
+                className="m-5 self-center rounded-full border-4 border-solid bg-white px-4 py-[5px] text-sm font-bold text-black"
+              >
+                + Education
+              </button>
+            </Card>
+          ) : (
+            <Card title="Education">
+              <Form id="education">
+                <Input
+                  label={"School"}
+                  type={"Text"}
+                  onChange={handleEducationInfoChange}
+                  name={EducationFields.school}
+                  value={selectedEduItem.school}
+                />
+                <Input
+                  label={"Degree"}
+                  type={"text"}
+                  onChange={handleEducationInfoChange}
+                  name={EducationFields.degree}
+                  value={selectedEduItem.degree}
+                />
+                <div className="flex gap-4">
+                  <Input
+                    label={"Start Date"}
+                    type={"text"}
+                    className="flex-1"
+                    name={EducationFields.startDate}
+                    onChange={handleEducationInfoChange}
+                    value={selectedEduItem.startDate}
+                  />
+                  <Input
+                    label={"End Date"}
+                    type="text"
+                    className="flex-1"
+                    name={EducationFields.endDate}
+                    onChange={handleEducationInfoChange}
+                    value={selectedEduItem.endDate}
+                  />
+                </div>
+                <Input
+                  label={"Location"}
+                  type={"text"}
+                  name={EducationFields.location}
+                  onChange={handleEducationInfoChange}
+                  value={selectedEduItem.location}
+                />
+
+                <Button
+                  title="Save"
+                  className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                  onclick={() => {
+                    setSelectedEduItem(null);
+                  }}
+                />
+              </Form>
+            </Card>
+          )}
           {!selectedExpItem ? (
-            <div>
+            <Card title="Experience">
               {formData.experience.map((item, index) => {
                 return (
                   <div key={index}>
-                    <div onClick={() => setSelectedExpItem(item)}>
+                    <div
+                      className="mt-3 border-b-4 border-solid border-gray-100 p-2 text-lg font-semibold hover:cursor-pointer md:px-5 md:py-3"
+                      onClick={() => setSelectedExpItem(item)}
+                    >
                       {item.workplaceName}
                     </div>
                   </div>
                 );
               })}
-              <Button
-                title="Add"
-                onclick={() => {
+              <button
+                onClick={() => {
                   formData.experience.push({
                     [ExperienceFields.workplaceName]: "",
                     [ExperienceFields.position]: "",
@@ -251,65 +304,69 @@ const App = () => {
                     formData.experience[formData.experience.length - 1],
                   );
                 }}
-              />
-            </div>
+                className="m-5 self-center rounded-full border-4 border-solid bg-white px-4 py-[5px] text-sm font-bold text-black"
+              >
+                + Experience
+              </button>
+            </Card>
           ) : (
-            <Form title={"Experience"} id="experience">
-              <Input
-                label={"Workplace Name"}
-                type={"Text"}
-                onChange={handlExperienceInfoChange}
-                name={ExperienceFields.workplaceName}
-                value={selectedExpItem.workplaceName}
-              />
-              <Input
-                label={"Position Title"}
-                type={"text"}
-                onChange={handlExperienceInfoChange}
-                name={ExperienceFields.position}
-                value={selectedExpItem.position}
-              />
-              <div className="flex gap-4">
+            <Card title="Experience">
+              <Form id="experience">
                 <Input
-                  label={"Start Date"}
+                  label={"Workplace Name"}
+                  type={"Text"}
+                  onChange={handlExperienceInfoChange}
+                  name={ExperienceFields.workplaceName}
+                  value={selectedExpItem.workplaceName}
+                />
+                <Input
+                  label={"Position Title"}
                   type={"text"}
-                  className="flex-1"
-                  name={ExperienceFields.startDate}
                   onChange={handlExperienceInfoChange}
-                  value={selectedExpItem.startDate}
+                  name={ExperienceFields.position}
+                  value={selectedExpItem.position}
                 />
+                <div className="flex gap-4">
+                  <Input
+                    label={"Start Date"}
+                    type={"text"}
+                    className="flex-1"
+                    name={ExperienceFields.startDate}
+                    onChange={handlExperienceInfoChange}
+                    value={selectedExpItem.startDate}
+                  />
+                  <Input
+                    label={"End Date"}
+                    type="text"
+                    className="flex-1"
+                    name={ExperienceFields.endDate}
+                    onChange={handlExperienceInfoChange}
+                    value={selectedExpItem.endDate}
+                  />
+                </div>
                 <Input
-                  label={"End Date"}
-                  type="text"
-                  className="flex-1"
-                  name={ExperienceFields.endDate}
+                  label={"Location"}
+                  type={"text"}
+                  name={ExperienceFields.location}
                   onChange={handlExperienceInfoChange}
-                  value={selectedExpItem.endDate}
+                  value={selectedExpItem.location}
                 />
-              </div>
-              <Input
-                label={"Location"}
-                type={"text"}
-                name={ExperienceFields.location}
-                onChange={handlExperienceInfoChange}
-                value={selectedExpItem.location}
-              />
-              <TextArea
-                label={"Description"}
-                name={ExperienceFields.description}
-                onChange={handlExperienceInfoChange}
-                value={selectedExpItem.description}
-                className="resize-y"
-              />
-              <Button
-                title="Save"
-                className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-                onclick={() => {
-                  formData.experience.push();
-                  setSelectedExpItem(null);
-                }}
-              />
-            </Form>
+                <TextArea
+                  label={"Description"}
+                  name={ExperienceFields.description}
+                  onChange={handlExperienceInfoChange}
+                  value={selectedExpItem.description}
+                  className="resize-y"
+                />
+                <Button
+                  title="Save"
+                  className="mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                  onclick={() => {
+                    setSelectedExpItem(null);
+                  }}
+                />
+              </Form>
+            </Card>
           )}
         </section>{" "}
         <section

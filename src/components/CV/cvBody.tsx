@@ -5,10 +5,7 @@ interface ICvBodyProps {
   experience?: TExperience[];
 }
 
-function CvEducation(props: TEducation) {
-  return <div></div>;
-}
-function CvExperience(props: TExperience) {}
+
 
 export default function CvBody({ education, experience }: ICvBodyProps) {
   return (
