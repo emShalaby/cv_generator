@@ -55,7 +55,7 @@ export interface IFormData {
   education: TEducation[];
   experience: TExperience[];
 }
-export const App = () => {
+export function App() {
   const [formData, setFormData] = useState<IFormData>({
     personalInfo: {
       [PersonalInfoFields.fullName]: placeHolderValues.name,
@@ -182,10 +182,10 @@ export const App = () => {
   };
   return (
     <div className=" " id="app">
-      <main className="flex gap-3 bg-gray-200 p-10 2xl:justify-center ">
+      <main className="flex gap-3 bg-gray-200 p-10 2xl:justify-center">
         <section
           id="cv-input"
-          className="flex max-w-[505px] flex-1 flex-col gap-2 "
+          className="flex max-w-[505px] flex-1 flex-col gap-2"
         >
           <Card title="Personal Details">
             <Form id="personalInfo">
@@ -443,11 +443,11 @@ export const App = () => {
         </section>{" "}
         <section
           id="cv-output"
-          className="flex min-w-[440px] max-w-[850px] flex-[3] flex-col "
+          className="flex min-w-[440px] max-w-[850px] flex-[3] flex-col"
         >
           <CV Data={formData} />
         </section>
       </main>
     </div>
   );
-};
+}
