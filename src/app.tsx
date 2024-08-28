@@ -1,9 +1,8 @@
 import Input from "./components/UI/input";
 import Form from "./components/UI/form";
-import "../styles/main.css";
+import "./styles/main.css";
 import React, { useState } from "react";
 import CV from "./components/CV/CV";
-import Button from "./components/UI/button";
 import TextArea from "./components/UI/textArea";
 import { v4 as uuidv4 } from "uuid";
 import Card from "./components/UI/card";
@@ -182,11 +181,11 @@ export const App = () => {
     });
   };
   return (
-    <div className="min-w-[800px] bg-[#EFF0F3]" id="app">
-      <main className="flex gap-[20px] p-10 2xl:justify-center">
+    <div className=" " id="app">
+      <main className="flex gap-3 bg-gray-200 p-10 2xl:justify-center ">
         <section
           id="cv-input"
-          className="flex max-w-[505px] flex-1 flex-col gap-5"
+          className="flex max-w-[505px] flex-1 flex-col gap-2 "
         >
           <Card title="Personal Details">
             <Form id="personalInfo">
@@ -444,12 +443,11 @@ export const App = () => {
         </section>{" "}
         <section
           id="cv-output"
-          className="flex min-w-[440px] max-w-[850px] flex-[3] flex-col"
+          className="flex min-w-[440px] max-w-[850px] flex-[3] flex-col "
         >
           <CV Data={formData} />
         </section>
       </main>
-      <footer></footer>
     </div>
   );
 };

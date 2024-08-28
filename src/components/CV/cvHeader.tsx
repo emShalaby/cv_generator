@@ -11,12 +11,12 @@ export default function CvHeader({
   address,
 }: IHeaderProps) {
   return (
-    <div className="flex min-h-[150px] flex-1 flex-col place-items-center justify-center bg-[#0E374E]">
+    <div className="flex min-h-[150px] flex-1 flex-col place-items-center justify-center bg-[#0E374E] p-3">
       <h1 className="mb-3 text-3xl font-bold text-white">{name}</h1>
-      <div className="flex gap-3 text-lg font-semibold text-white">
-        <p className="">{email}</p>
-        <p className=""> {phone}</p>
-        <p className="">{address}</p>
+      <div className="flex flex-wrap gap-5 text-lg  font-semibold text-white  justify-center">
+        <p className="whitespace-nowrap">{email}</p>
+        <p className="whitespace-nowrap"> {phone}</p>
+        <p className="whitespace-nowrap">{address}</p>
       </div>
     </div>
   );

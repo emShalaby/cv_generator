@@ -4,7 +4,7 @@ import { IFormData } from "../../app";
 
 export default function CV({ Data }: { Data: IFormData }) {
   return (
-    <div>
+    <div className="flex-1">
       <CvHeader
         name={Data.personalInfo.fullName}
         email={Data.personalInfo.email}

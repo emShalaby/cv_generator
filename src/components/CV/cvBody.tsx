@@ -7,7 +7,7 @@ interface ICvBodyProps {
 
 export default function CvBody({ education, experience }: ICvBodyProps) {
   return (
-    <div className="flex flex-[10] flex-col bg-white p-10">
+    <div className="flex  flex-col bg-white   h-[100%]  p-10">
       <div className="mt-4 flex justify-center bg-gray-100 py-1 text-xl font-bold">
         <h2>Education</h2>
       </div>
