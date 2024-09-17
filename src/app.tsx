@@ -3,35 +3,20 @@ import Form from "./components/UI/form";
 import "./styles/main.css";
 import React, { useState } from "react";
 import CV from "./components/CV/CV";
-import TextArea from "./components/UI/textArea";
 import { v4 as uuidv4 } from "uuid";
 import Card from "./components/UI/card";
-enum PersonalInfoFields {
-  fullName = "fullName",
-  phoneNumber = "phoneNumber",
-  email = "email",
-  address = "address",
-}
-enum EducationFields {
-  school = "school",
-  degree = "degree",
-  startDate = "startDate",
-  endDate = "endDate",
-  location = "location",
-  id = "id",
-}
-enum ExperienceFields {
-  workplaceName = "workplaceName",
-  position = "position",
-  startDate = "startDate",
-  endDate = "endDate",
-  location = "location",
-  description = "description",
-  id = "id",
-}
-type TPersonalInfo = Record<PersonalInfoFields, string>;
-export type TEducation = Record<EducationFields, string>;
-export type TExperience = Record<ExperienceFields, string>;
+import Personalform from "./components/forms/PersonalForm";
+import {
+  EducationFields,
+  ExperienceFields,
+  TFormData,
+  PersonalInfoFields,
+  TEducation,
+  TExperience,
+} from "./types";
+import ExperienceForm from "./components/forms/ExperienceForm";
+import EducationForm from "./components/forms/EducationForm";
+
 const placeHolderValues = {
   name: "Mohammed Shalaby",
   email: "mohammed.shalaby@mail.co.eg",
@@ -50,13 +35,9 @@ const placeHolderValues = {
   description:
     "Designed and prototyped user interface patterns for various clients in various industries, ranging from self-service apps within the telecommunications-sector to mobile games for IOS and Android",
 };
-export interface IFormData {
-  personalInfo: TPersonalInfo;
-  education: TEducation[];
-  experience: TExperience[];
-}
+
 export function App() {
-  const [formData, setFormData] = useState<IFormData>({
+  const [formData, setFormData] = useState<TFormData>({
     personalInfo: {
       [PersonalInfoFields.fullName]: placeHolderValues.name,
       [PersonalInfoFields.phoneNumber]: placeHolderValues.phone,
@@ -188,37 +169,12 @@ export function App() {
           className="flex max-w-[505px] flex-1 flex-col gap-2"
         >
           <Card title="Personal Details">
-            <Form id="personalInfo">
-              <Input
-                label={"Full name"}
-                type={"Text"}
-                name={PersonalInfoFields.fullName}
-                onChange={handlePersonalInfoChange}
-                value={formData.personalInfo.fullName}
-              />
-              <Input
-                label={"Email"}
-                type={"Email"}
-                name={PersonalInfoFields.email}
-                onChange={handlePersonalInfoChange}
-                value={formData.personalInfo.email}
-              />
-              <Input
-                label={"Phone number"}
-                type={"tel"}
-                name={PersonalInfoFields.phoneNumber}
-                onChange={handlePersonalInfoChange}
-                value={formData.personalInfo.phoneNumber}
-              />
-              <Input
-                label={"Addresss"}
-                type="text"
-                name={PersonalInfoFields.address}
-                onChange={handlePersonalInfoChange}
-                value={formData.personalInfo.address}
-              />
-            </Form>
+            <Personalform
+              handlePersonalInfoChange={handlePersonalInfoChange}
+              formData={formData}
+            />
           </Card>
+
           {!selectedEduItem ? (
             <Card title="Education">
               {formData.education.map((item) => {
@@ -267,64 +223,27 @@ export function App() {
             </Card>
           ) : (
             <Card title="Education">
-              <Form id="education">
-                <Input
-                  label={"School"}
-                  type={"Text"}
-                  onChange={handleEducationInfoChange}
-                  name={EducationFields.school}
-                  value={selectedEduItem.school}
-                />
-                <Input
-                  label={"Degree"}
-                  type={"text"}
-                  onChange={handleEducationInfoChange}
-                  name={EducationFields.degree}
-                  value={selectedEduItem.degree}
-                />
-                <div className="flex gap-4">
-                  <Input
-                    label={"Start Date"}
-                    type={"text"}
-                    className="flex-1"
-                    name={EducationFields.startDate}
-                    onChange={handleEducationInfoChange}
-                    value={selectedEduItem.startDate}
-                  />
-                  <Input
-                    label={"End Date"}
-                    type="text"
-                    className="flex-1"
-                    name={EducationFields.endDate}
-                    onChange={handleEducationInfoChange}
-                    value={selectedEduItem.endDate}
-                  />
-                </div>
-                <Input
-                  label={"Location"}
-                  type={"text"}
-                  name={EducationFields.location}
-                  onChange={handleEducationInfoChange}
-                  value={selectedEduItem.location}
-                />
-                <div className="width-[100%] flex">
-                  <button
-                    className="mt-3 self-start rounded-md bg-red-500 px-3 py-1 text-white"
-                    onClick={() => {
-                      deleteSelectedEduItem();
-                      setSelectedEduItem(null);
-                    }}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="ml-auto mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-                    onClick={() => setSelectedEduItem(null)}
-                  >
-                    Save
-                  </button>
-                </div>
-              </Form>
+              <EducationForm
+                selectedEduItem={selectedEduItem}
+                handleEducationInfoChange={handleEducationInfoChange}
+              />
+              <div className="width-[100%] mx-5 mb-2 flex">
+                <button
+                  className="mt-3 self-start rounded-md bg-red-500 px-3 py-1 text-white"
+                  onClick={() => {
+                    deleteSelectedEduItem();
+                    setSelectedEduItem(null);
+                  }}
+                >
+                  Delete
+                </button>
+                <button
+                  className="ml-auto mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                  onClick={() => setSelectedEduItem(null)}
+                >
+                  Save
+                </button>
+              </div>
             </Card>
           )}
           {!selectedExpItem ? (
@@ -373,71 +292,27 @@ export function App() {
             </Card>
           ) : (
             <Card title="Experience">
-              <Form id="experience">
-                <Input
-                  label={"Workplace Name"}
-                  type={"Text"}
-                  onChange={handlExperienceInfoChange}
-                  name={ExperienceFields.workplaceName}
-                  value={selectedExpItem.workplaceName}
-                />
-                <Input
-                  label={"Position Title"}
-                  type={"text"}
-                  onChange={handlExperienceInfoChange}
-                  name={ExperienceFields.position}
-                  value={selectedExpItem.position}
-                />
-                <div className="flex gap-4">
-                  <Input
-                    label={"Start Date"}
-                    type={"text"}
-                    className="flex-1"
-                    name={ExperienceFields.startDate}
-                    onChange={handlExperienceInfoChange}
-                    value={selectedExpItem.startDate}
-                  />
-                  <Input
-                    label={"End Date"}
-                    type="text"
-                    className="flex-1"
-                    name={ExperienceFields.endDate}
-                    onChange={handlExperienceInfoChange}
-                    value={selectedExpItem.endDate}
-                  />
-                </div>
-                <Input
-                  label={"Location"}
-                  type={"text"}
-                  name={ExperienceFields.location}
-                  onChange={handlExperienceInfoChange}
-                  value={selectedExpItem.location}
-                />
-                <TextArea
-                  label={"Description"}
-                  name={ExperienceFields.description}
-                  onChange={handlExperienceInfoChange}
-                  value={selectedExpItem.description}
-                  className="resize-y"
-                />
-                <div className="width-[100%] flex">
-                  <button
-                    className="mt-3 self-start rounded-md bg-red-500 px-3 py-1 text-white"
-                    onClick={() => {
-                      deleteSelectedExpItem();
-                      setSelectedExpItem(null);
-                    }}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="ml-auto mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
-                    onClick={() => setSelectedExpItem(null)}
-                  >
-                    Save
-                  </button>
-                </div>
-              </Form>
+              <ExperienceForm
+                selectedExpItem={selectedExpItem}
+                handlExperienceInfoChange={handlExperienceInfoChange}
+              />
+              <div className="width-[100%] mx-5 mb-2 flex">
+                <button
+                  className="mt-3 self-start rounded-md bg-red-500 px-3 py-1 text-white"
+                  onClick={() => {
+                    deleteSelectedExpItem();
+                    setSelectedExpItem(null);
+                  }}
+                >
+                  Delete
+                </button>
+                <button
+                  className="ml-auto mt-3 self-end rounded-md bg-blue-400 px-3 py-1 text-white"
+                  onClick={() => setSelectedExpItem(null)}
+                >
+                  Save
+                </button>
+              </div>
             </Card>
           )}
         </section>{" "}
